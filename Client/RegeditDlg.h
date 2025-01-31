@@ -56,7 +56,7 @@ protected:
 
     CStatusBar  m_wndStatusBar;
     CXTHeaderCtrl   m_heades;
-
+    CString m_strHost;
 
     // Generated message map functions
     //{{AFX_MSG(CRegeditDlg)

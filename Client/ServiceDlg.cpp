@@ -16,7 +16,6 @@ static char THIS_FILE[] = __FILE__;
 
 #define WM_SHOW_MSG (WM_USER+103)
 
-extern CString strHost;
 /////////////////////////////////////////////////////////////////////////////
 // CServiceDlg dialog
 static UINT indicators[] = {
@@ -30,6 +29,7 @@ static UINT indicators[] = {
 CServiceDlg::CServiceDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CXTPDialog(CServiceDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CServiceDlg)
     // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
@@ -94,12 +94,11 @@ BOOL CServiceDlg::OnInitDialog()
     memset(&sockAddr, 0, sizeof(sockAddr));
     int nSockAddrLen = sizeof(sockAddr);
     BOOL bResult = getpeername(m_pContext->m_Socket, (SOCKADDR*)&sockAddr, &nSockAddrLen);
-//	str.Format("服务管理 \\\\%s", bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
-    str.Format(_T("[%s - %s]  服务管理"), strHost,bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
+    str.Format(_T("[%s - %s]  服务管理"), m_strHost,bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
     SetWindowText(str);
 
     // 最大化
-//	ShowWindow( SW_SHOWMAXIMIZED );
+    //	ShowWindow( SW_SHOWMAXIMIZED );
 
     m_list.SetExtendedStyle(/*LVS_EX_FLATSB |*/ LVS_EX_FULLROWSELECT);
     m_list.InsertColumn(0, "显示名称", LVCFMT_LEFT, 150);

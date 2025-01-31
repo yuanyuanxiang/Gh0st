@@ -46,6 +46,7 @@ protected:
     CIOCPServer* m_iocpServer;
     CString IPAddress;
     UINT nRemotePort;
+    CString m_strHost;
 
     DWORD dwMem;
     DWORD dwCpu;

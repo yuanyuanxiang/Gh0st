@@ -8,7 +8,6 @@
 #include "Include\InputDlg.h"
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
-extern CString strHost;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -32,6 +31,7 @@ static UINT indicators[] = {
 CFileManagerDlg::CFileManagerDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CDialog(CFileManagerDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CFileManagerDlg)
     //}}AFX_DATA_INIT
     // 初始化应该传输的数据包大小为0
@@ -239,8 +239,7 @@ BOOL CFileManagerDlg::OnInitDialog()
 
     // 设置标题
     CString str;
-    str.Format(_T("[%s - %s]  文件管理"), strHost,m_IPAddress);
-//	str.Format(_T("\\\\%s - 文件管理"),m_IPAddress);
+    str.Format(_T("[%s - %s]  文件管理"), m_strHost,m_IPAddress);
     SetWindowText(str);
     //创建工具栏
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBRS_TOOLTIPS | CBRS_TOOLTIPS | CBRS_FLYBY;

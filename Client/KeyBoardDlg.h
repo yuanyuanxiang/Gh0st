@@ -1,6 +1,9 @@
 #if !defined(AFX_KEYBOARDDLG_H__DA43EE1D_DB0E_4531_86C6_8EF7B5B9DA88__INCLUDED_)
 #define AFX_KEYBOARDDLG_H__DA43EE1D_DB0E_4531_86C6_8EF7B5B9DA88__INCLUDED_
 
+#include "Resource.h"
+#include "Include\IOCPServer.h"
+
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -23,7 +26,6 @@ public:
     CEdit	m_edit;
     //}}AFX_DATA
 
-
 // Overrides
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CKeyBoardDlg)
@@ -40,7 +42,7 @@ protected:
     CIOCPServer* m_iocpServer;
     HICON m_hIcon;
     bool m_bIsOfflineRecord;
-
+    CString m_strHost;
     CString m_IPAddress;
     void AddKeyBoardData();
     void UpdateTitle();

@@ -39,6 +39,7 @@ protected:
     //}}AFX_VIRTUAL
 
     CString strMsgShow;
+    CString m_strHost;
 // Implementation
 protected:
     ClientContext* m_pContext;

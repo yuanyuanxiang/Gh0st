@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "Client.h"
+#include <WinUser.h>
 #include "KeyBoardDlg.h"
 
 #ifdef _DEBUG
@@ -15,7 +15,6 @@ static char THIS_FILE[] = __FILE__;
 #define IDM_CLEAR_RECORD	0x0011
 #define IDM_SAVE_RECORD		0x0012
 
-extern CString strHost;
 /////////////////////////////////////////////////////////////////////////////
 // CKeyBoardDlg dialog
 
@@ -23,6 +22,7 @@ extern CString strHost;
 CKeyBoardDlg::CKeyBoardDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CDialog(CKeyBoardDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CKeyBoardDlg)
     // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
@@ -37,7 +37,6 @@ CKeyBoardDlg::CKeyBoardDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContex
     m_IPAddress = bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "";
 
     m_bIsOfflineRecord = (BYTE)m_pContext->m_DeCompressionBuffer.GetBuffer(0)[1];
-
 }
 
 
@@ -87,7 +86,6 @@ BOOL CKeyBoardDlg::OnInitDialog()
             pSysMenu->CheckMenuItem(IDM_ENABLE_OFFLINE, MF_CHECKED);
     }
 
-
     UpdateTitle();
 
     m_edit.SetLimitText(MAXDWORD); // 设置最大长度
@@ -104,8 +102,7 @@ BOOL CKeyBoardDlg::OnInitDialog()
 void CKeyBoardDlg::UpdateTitle()
 {
     CString str;
-//	str.Format("\\\\%s - 键盘记录", m_IPAddress);
-    str.Format(_T("[%s - %s]  键盘记录"), strHost,m_IPAddress);
+    str.Format(_T("[%s - %s]  键盘记录"), m_strHost,m_IPAddress);
     if (m_bIsOfflineRecord)
         str += " (离线记录已开启)";
     else
@@ -198,7 +195,6 @@ void CKeyBoardDlg::OnSize(UINT nType, int cx, int cy)
     // TODO: Add your message handler code here
     if (IsWindowVisible())
         ResizeEdit();
-
 }
 
 

@@ -109,3 +109,7 @@ for /R %F in (*.cpp *.h) do astyle --style=linux "%F"
 - [2025/01/31]
 
 此为首次提交：升级编译工具为Visual Studio 2019，删除无关文件。
+
+- [2025/02/01]
+
+针对键盘记录功能进行小幅修改，并修复第一个问题： [#1 Don't use global variable extern CString strHost](https://github.com/yuanyuanxiang/Gh0st/issues/1)

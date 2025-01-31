@@ -60,6 +60,7 @@ private:
     HDC m_hDC, m_hMemDC;
     HBITMAP	m_hFullBitmap;
     LPVOID m_lpScreenDIB;
+    CString m_strHost;
 
     CString m_aviFile; // 录像文件名。如果文件名不为空就写入
     CBmpToAvi	m_aviStream;
