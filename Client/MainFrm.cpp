@@ -704,28 +704,19 @@ void CMainFrame::OnClose()
     // 保存工具栏和菜单的当前状态
     SaveCommandBars(_T("CommandBars"));
 
-    if (MessageBox(_T("确定退出?"), _T("提示"), MB_YESNO | MB_ICONQUESTION) == IDNO)
-        return;
-
-
-    CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
-    pMainFrame->m_TrayIcon.RemoveIcon();
-
-    if (NULL!=m_iocpServer) {
-        m_iocpServer->Shutdown();
-        delete m_iocpServer;
-    }
-
-
-    CXTPFrameWnd::OnClose();
+	m_TrayIcon.MinimizeToTray(this);
 }
 
 
 void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 {
     if (nID == SC_MINIMIZE) {
+#if ENABLE_MINSIZE
         m_TrayIcon.MinimizeToTray(this);
-        m_TrayIcon.ShowBalloonTip( _T("程序最小化托盘运行中..."), _T("LiteX"), NIIF_NONE, 10);
+        m_TrayIcon.ShowBalloonTip( _T("程序最小化到托盘"), _T("提示"), NIIF_NONE, 10);
+#else
+        CXTPFrameWnd::OnSysCommand(nID, lParam);
+#endif
     } else {
         CXTPFrameWnd::OnSysCommand(nID, lParam);
     }
@@ -749,7 +740,20 @@ void CMainFrame::OnMenuitemHide()
 void CMainFrame::OnAppExit()
 {
     // TODO: 在此添加命令处理程序代码
-    OnClose();
+    SaveCommandBars(_T("CommandBars"));
+
+    if (MessageBox(_T("确定退出?"), _T("提示"), MB_YESNO | MB_ICONQUESTION) == IDNO)
+        return;
+
+    CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+    pMainFrame->m_TrayIcon.RemoveIcon();
+
+    if (NULL!=m_iocpServer) {
+        m_iocpServer->Shutdown();
+        delete m_iocpServer;
+    }
+
+    CXTPFrameWnd::OnClose();
 }
 
 

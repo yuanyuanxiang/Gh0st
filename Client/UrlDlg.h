@@ -25,6 +25,7 @@ protected:
     HICON m_hIcon;
     ClientContext* m_pContext;
     CIOCPServer* m_iocpServer;
+    CString m_strHost;
 
     DECLARE_MESSAGE_MAP()
     BOOL m_bOnClose;

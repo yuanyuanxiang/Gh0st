@@ -12,12 +12,12 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-extern CString strHost;
 /////////////////////////////////////////////////////////////////////////////
 // CSystemDlg dialog
 CSystemDlg::CSystemDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CDialog(CSystemDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CSystemDlg)
     // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
@@ -156,8 +156,7 @@ BOOL CSystemDlg::OnInitDialog()
     int nSockAddrLen = sizeof(sockAddr);
     BOOL bResult = getpeername(m_pContext->m_Socket, (SOCKADDR*)&sockAddr, &nSockAddrLen);
     IPAddress = bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "";
-    str.Format(_T("[%s - %s]  系统管理"), strHost,IPAddress);
-//	str.Format("\\\\%s - 系统管理", IPAddress);
+    str.Format(_T("[%s - %s]  系统管理"), m_strHost,IPAddress);
     SetWindowText(str);
 
     m_tab.InsertItem(0, "进程");

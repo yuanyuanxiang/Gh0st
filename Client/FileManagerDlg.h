@@ -60,9 +60,9 @@ public:
     CXTPToolBar m_wndToolBar_Remote;
     CXTPToolBar m_wndToolBar_Search;
 
-//	void ShowMessage(char *lpFmt, ...);
     CString m_Local_Path;
     CString m_Remote_Path;
+    CString m_strHost;
 
     BYTE m_bRemoteDriveList[1024]; // 保存远程驱动器列表
     CString GetParentDirectory(CString strPath);

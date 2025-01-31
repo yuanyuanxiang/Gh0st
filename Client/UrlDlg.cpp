@@ -5,8 +5,6 @@
 #include "Client.h"
 #include "UrlDlg.h"
 
-
-extern CString strHost;
 // CUrlDlg 对话框
 
 IMPLEMENT_DYNAMIC(CUrlDlg, CDialog)
@@ -18,7 +16,7 @@ CUrlDlg::CUrlDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContex
     m_pContext = pContext;
 
     m_bOnClose = FALSE;
-
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
 }
 
 
@@ -92,8 +90,7 @@ BOOL CUrlDlg::OnInitDialog()
     memset(&sockAddr, 0, sizeof(sockAddr));
     int nSockAddrLen = sizeof(sockAddr);
     BOOL bResult = getpeername(m_pContext->m_Socket, (SOCKADDR*)&sockAddr, &nSockAddrLen);
-    //	str.Format("服务管理 \\\\%s", bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
-    str.Format(_T("[%s - %s]  网页记录"), strHost,bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
+    str.Format(_T("[%s - %s]  网页记录"), m_strHost,bResult != INVALID_SOCKET ? inet_ntoa(sockAddr.sin_addr) : "");
     SetWindowText(str);
 
 // 	HWND hWndHeader = m_list_url.GetDlgItem(0)->GetSafeHwnd();

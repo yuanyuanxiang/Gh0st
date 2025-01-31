@@ -7,6 +7,7 @@
 #include "../MainFrm.h"
 
 #include "Public/zlib/zlib.h"
+#include <WS2tcpip.h>
 
 
 #ifdef _DEBUG
@@ -40,6 +41,23 @@ char* MyDecode(char *data,int len)
         data[i] ^= 0x99;
     }
     return data;
+}
+
+// 根据 socket 获取客户端IP地址.
+std::string GetRemoteIP(SOCKET sock) {
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getpeername(sock, (sockaddr*)&addr, &addrLen) == 0) {
+		char ipStr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &addr.sin_addr, ipStr, sizeof(ipStr));
+		TRACE(">>> 对端 IP 地址: %s\n", ipStr);
+		return ipStr;
+	}
+	TRACE(">>> 获取对端 IP 失败, 错误码: %d\n", WSAGetLastError());
+	char buf[10];
+	sprintf_s(buf, "%d", sock);
+	return buf;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1057,8 +1075,6 @@ ClientContext*  CIOCPServer::AllocateContext()
 
 void CIOCPServer::ResetConnection(ClientContext* pContext)
 {
-
-    CString strHost;
     ClientContext* pCompContext = NULL;
 
     CLock cs(CIOCPServer::m_cs, "ResetConnection");
@@ -1076,7 +1092,6 @@ void CIOCPServer::ResetConnection(ClientContext* pContext)
 void CIOCPServer::DisconnectAll()
 {
     m_bDisconnectAll = true;
-    CString strHost;
     ClientContext* pContext = NULL;
 
     CLock cs(CIOCPServer::m_cs, "DisconnectAll");

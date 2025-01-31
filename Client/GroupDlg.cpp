@@ -154,7 +154,6 @@ void CGroupDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 }
 
 // 右键主机
-CString strHost;
 void CGroupDlg::OnNMRClickTreeGroup(NMHDR *pNMHDR, LRESULT *pResult)
 {
     // TODO: 在此添加控件通知处理程序代码
@@ -169,6 +168,7 @@ void CGroupDlg::OnNMRClickTreeGroup(NMHDR *pNMHDR, LRESULT *pResult)
     HTREEITEM hItem  = m_tree_group.HitTest(pt,&flag) ;
     if(NULL != hItem) {
         m_tree_group.Select(hItem,TVGN_CARET);//设置点击节点为当前选中节点
+        CString strHost;
         strHost.Format(_T("%s"),m_tree_group.GetItemText(hItem));
         if (!m_tree_group.ItemHasChildren(hItem)&&strHost.Find(_T("默认分组"))==-1) { // 过滤下分组
             CMenu m,*mn;

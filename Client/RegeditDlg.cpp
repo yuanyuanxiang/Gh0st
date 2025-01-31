@@ -12,7 +12,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-extern CString strHost;
 /////////////////////////////////////////////////////////////////////////////
 // CRegeditDlg dialog
 LPCTSTR CRegeditDlg::m_strComputer = TEXT("我的电脑");
@@ -25,6 +24,7 @@ static UINT indicators[] = {
 CRegeditDlg::CRegeditDlg(CWnd* pParent, CIOCPServer* pIOCPServer, ClientContext *pContext)
     : CDialog(CRegeditDlg::IDD, pParent)
 {
+    m_strHost = GetRemoteIP(pContext->m_Socket).c_str();
     //{{AFX_DATA_INIT(CRegeditDlg)
     // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
@@ -132,8 +132,7 @@ BOOL CRegeditDlg::OnInitDialog()
     // TODO: Add extra initialization here
     // 设置标题
     CString str;
-    str.Format(_T("[%s - %s]  注册表管理"), strHost,m_IPAddress);
-//	str.Format("远程注册表 \\\\%s", m_IPAddress);
+    str.Format(_T("[%s - %s]  注册表管理"), m_strHost,m_IPAddress);
     SetWindowText(str);
 
     // 创建状态栏

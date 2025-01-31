@@ -19,8 +19,9 @@
 #include <process.h>
 
 #include <afxtempl.h>
+#include <string>
 
-
+std::string GetRemoteIP(SOCKET sock);
 
 ////////////////////////////////////////////////////////////////////
 #define	NC_CLIENT_CONNECT		0x0001
