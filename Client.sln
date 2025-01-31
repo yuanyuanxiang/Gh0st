@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.35425.106
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{5F6DBB31-6760-43EC-B59C-1FD1CC00AFDF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{14842C5E-A015-4DE1-BCCC-AE02F843B6D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadMe", "ReadMe", "{76652E03-F0C1-4106-886F-8DC2A6AF3FF1}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F6DBB31-6760-43EC-B59C-1FD1CC00AFDF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F6DBB31-6760-43EC-B59C-1FD1CC00AFDF}.Debug|Win32.Build.0 = Debug|Win32
+		{5F6DBB31-6760-43EC-B59C-1FD1CC00AFDF}.Release|Win32.ActiveCfg = Release|Win32
+		{5F6DBB31-6760-43EC-B59C-1FD1CC00AFDF}.Release|Win32.Build.0 = Release|Win32
+		{14842C5E-A015-4DE1-BCCC-AE02F843B6D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14842C5E-A015-4DE1-BCCC-AE02F843B6D4}.Debug|Win32.Build.0 = Debug|Win32
+		{14842C5E-A015-4DE1-BCCC-AE02F843B6D4}.Release|Win32.ActiveCfg = Release|Win32
+		{14842C5E-A015-4DE1-BCCC-AE02F843B6D4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F21562BB-E42B-41C0-951E-738FC72125CD}
+	EndGlobalSection
+EndGlobal
