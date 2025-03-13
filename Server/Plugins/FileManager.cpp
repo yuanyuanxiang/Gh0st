@@ -7,7 +7,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFileManager::CFileManager(CClientSocket *pClient):CManager(pClient)
+CFileManager::CFileManager(CClientSocket *pClient):CManager(pClient, pClient->GetStatus())
 {
     m_nTransferMode = TRANSFER_MODE_NORMAL;
     // 发送驱动器列表, 开始进行文件管理，建立新线程
@@ -163,11 +163,12 @@ void CFileManager::FindFileInDir(char* rootDir,char* searchfilename,BOOL bEnable
 }
 
 
-void WINAPI CFileManager::FindFileThread(LPVOID lparam)
+DWORD WINAPI CFileManager::FindFileThread(LPVOID lparam)
 {
     CFileManager *pThis = (CFileManager *)lparam;
     pThis->FindFileInDir(pThis->filesearch.SearchPath,pThis->filesearch.SearchFileName,pThis->filesearch.bEnabledSubfolder);
     pThis->SendToken(TOKEN_SEARCH_FILE_FINISH);
+    return 0;
 }
 
 void CFileManager::StopSearchTheard()
@@ -186,7 +187,7 @@ void CFileManager::SendSearchFilesList(LPCTSTR str)
 
     m_hWorkThread = MyCreateThread(NULL,
                                    0,
-                                   (LPTHREAD_START_ROUTINE)FindFileThread,
+                                   FindFileThread,
                                    (LPVOID)this,
                                    0,
                                    NULL

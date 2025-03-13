@@ -7,7 +7,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CServiceManager::CServiceManager(CClientSocket *pClient) : CManager(pClient)
+CServiceManager::CServiceManager(CClientSocket *pClient) : CManager(pClient, pClient->GetStatus())
 {
     SendServicesList();
 

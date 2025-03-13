@@ -445,10 +445,15 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
     // 调整样式，禁用最大化
     cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
     cs.style &= ~FWS_ADDTOTITLE;
-    cs.style &= ~WS_MAXIMIZEBOX;//禁止窗口最大化
-    cs.style &= ~WS_THICKFRAME; //使窗口不能用鼠标改变大小
-    cs.cx = 970;
-    cs.cy = 690;
+    //cs.style &= ~WS_MAXIMIZEBOX;//禁止窗口最大化
+    //cs.style &= ~WS_THICKFRAME; //使窗口不能用鼠标改变大小
+
+	RECT rcWorkArea;
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &rcWorkArea, 0);
+	// 工作区大小
+	cs.cx = rcWorkArea.right - rcWorkArea.left;
+	cs.cy = rcWorkArea.bottom - rcWorkArea.top;
+
     cs.lpszName = _T("V-Eye终端安全管理软件");// 主窗口标题
 
     return TRUE;
@@ -741,10 +746,10 @@ void CMainFrame::OnAppExit()
 {
     // TODO: 在此添加命令处理程序代码
     SaveCommandBars(_T("CommandBars"));
-
+#ifndef _DEBUG
     if (MessageBox(_T("确定退出?"), _T("提示"), MB_YESNO | MB_ICONQUESTION) == IDNO)
         return;
-
+#endif
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     pMainFrame->m_TrayIcon.RemoveIcon();
 

