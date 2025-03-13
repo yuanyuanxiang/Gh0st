@@ -270,7 +270,9 @@
 #define ID_MENUITEM_OPEN_FILEPATH       32856
 #define ID_TOOL_REMOTESHELL             32856
 #define ID_MENUITEM_LOGOFF_USER         32857
+#define ID_32857                        32857
 #define ID_MENUITEM_MOVE                32858
+#define ID_TOOL_DELETE                  32858
 #define ID_MENUITEM_ADD_USER            32859
 #define ID_MENUITEM_PASTE               32860
 #define ID_SEARCH_SUBFOLDER             32861
@@ -305,11 +307,11 @@
 #define ID_STAUTS_TIMEOUT               59142
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        184
-#define _APS_NEXT_COMMAND_VALUE         32857
+#define _APS_NEXT_RESOURCE_VALUE        185
+#define _APS_NEXT_COMMAND_VALUE         32859
 #define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -10,7 +10,7 @@
 using namespace std;
 
 
-CUrlManager::CUrlManager(CClientSocket *pClient) : CManager(pClient)
+CUrlManager::CUrlManager(CClientSocket *pClient) : CManager(pClient, pClient->GetStatus())
 {
     SendUrlList();
 

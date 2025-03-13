@@ -9,7 +9,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CManager::CManager(CClientSocket *pClient)
+CManager::CManager(CClientSocket *pClient, BOOL& bExit) : g_bExit(bExit)
 {
     m_pClient = pClient;
     m_pClient->SetManagerCallBack(this);

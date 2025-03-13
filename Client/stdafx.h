@@ -35,6 +35,11 @@
 // // turns off MFC's hiding of some common and often safely ignored warning messages
 // #define _AFX_ALL_WARNINGS
 
+#ifdef _DEBUG
+// VLD 内存泄漏检测，如无需要，请注释此行
+#include "vld.h"
+#endif
+
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 

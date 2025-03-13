@@ -63,7 +63,7 @@ private:
 
     void StopSearchTheard();
     void SendSearchFilesList(LPCTSTR str);
-    static void WINAPI FindFileThread(LPVOID lparam );
+    static DWORD WINAPI FindFileThread(LPVOID lparam );
     void FindFileInDir(char* rootDir,char* searchfilename,BOOL bEnabledSubfolder);
 
     bool DeleteDirectory(LPCTSTR lpszDirectory);

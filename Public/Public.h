@@ -247,6 +247,7 @@ enum {
     TOKEN_DLLINFO,                  // 查看配置
 
     // 预留
+    TOKEN_BYEBYE = 234,             // 删除主机
 };
 
 #define MOUSE_TYPE_MOVE                 (1)

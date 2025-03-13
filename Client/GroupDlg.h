@@ -53,6 +53,7 @@ public:
     afx_msg void OnToolSendmsg();
     afx_msg void OnToolChangeremark();
     afx_msg void OnToolRemoteshell();
+    afx_msg void OnToolDelete();
 };
 
 #endif

